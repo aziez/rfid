@@ -4,12 +4,13 @@ from datetime import  datetime
 from tkinter import  *
 from tkinter import ttk
 
+
 PRESET_Value = 0xFFFF
 POLYNOMIAL = 0x8408
 
 port = ['COM1', 'COM2', 'COM3', 'COM4']
 reader_add = "FF"
-test_serial = Serial('COM4', 57600, timeout=0.1);
+test_serial = Serial('COM3', 57600, timeout=0.1);
 
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%y %H:%M:%S")
@@ -78,88 +79,70 @@ def send_cmd(cmd):
     return cmd
 
 
+def btnConfigCallback():
+    global value
+    value = lbReader.get()
 
-def main() :
-    INV1 = send_cmd(INVENTORY1)
-    INV2 = send_cmd(INVENTORY2)
+    reader_add = value
 
-    main = Tk()
-    main.geometry("800x500")
+    return  reader_add
+
+
+
+INV1 = send_cmd(INVENTORY1)
+INV2 = send_cmd(INVENTORY2)
+
+main = Tk()
+main.geometry("800x500")
 
 # FRAME UNTUK SETUP READER
-    configFrame = ttk.LabelFrame(main)
-    configFrame.configure(height=150, text="Scanner Setup", width=300,)
-    configFrame.grid(column=0, row=0)
+configFrame = ttk.LabelFrame(main)
+configFrame.configure(height=150, width=300, text="Setup Scanner")
+configFrame.grid(column=0, row=0)
 
-    lbPort = ttk.Label(configFrame, text="COM Port communication", anchor="w")
-    lbPort.grid(column=0, row=0)
+lbPort = ttk.Label(configFrame, text="COM Port communication", anchor="w")
+lbPort.grid(column=0, row=0)
 
-    cbPort = ttk.Combobox(configFrame)
-    cbPort.configure(values=port)
-    cbPort.grid(column=0, row=1)
+cbPort = ttk.Combobox(configFrame)
+cbPort.configure(values=port)
+cbPort.grid(column=0, row=1)
 
-    lbReader = ttk.Label(configFrame, text="ID Reader")
-    lbReader.grid(column=5, row=0)
+lbReader = ttk.Label(configFrame, text="ID Reader")
+lbReader.grid(column=1, row=0)
 
-    lbReader = ttk.Entry(configFrame)
-    lbReader.grid(column=5, row=1)
-    lbReader.insert("0", reader_add)
-    lbReader.configure(width=5)
+lbReader = ttk.Entry(configFrame)
+lbReader.grid(column=1, row=1)
+lbReader.insert("0", reader_add)
+lbReader.configure(width=30)
 
-    btnReader = ttk.Button(configFrame)
-    btnReader.configure(text="Open Port COM")
-    btnReader.grid(column=0, row=2)
+btnReader = ttk.Button(configFrame, command=btnConfigCallback)
+btnReader.configure(text="Open Port COM")
+btnReader.grid(column=2, row=1)
+
+lbreaderNow = ttk.Label(configFrame, text=f"COMP Port : {reader_add}")
+lbreaderNow.grid(column=1, row=2)
 
 
-
-
-# DATA YANG DI BACA KARTU
-    frame = ttk.LabelFrame(main)
-    frame.configure(height=150, width=300, text="Data Kartu")
-    frame.grid(column=0, row=1)
+    # DATA YANG DI BACA KARTU
+frame = ttk.LabelFrame(main)
+frame.configure(height=150, width=300, text="Data Kartu")
+frame.grid(column=0, row=1)
 
 # LABEL
-    lb1 = ttk.Label(frame, text="INVENTORY 1", foreground="blue", font=("Helvetica", 12), padding=10)
-    lb1.grid(column=0, row=0)
-    lb2 = ttk.Label(frame, text="INVENTORY 2", foreground="blue", font=("Helvetica", 12), padding=10)
-    lb2.grid(column=0, row=1)
+lb1 = ttk.Label(frame, text="INVENTORY 1", foreground="blue", font=("Helvetica", 12), padding=10)
+lb1.grid(column=0, row=0)
+lb2 = ttk.Label(frame, text="INVENTORY 2", foreground="blue", font=("Helvetica", 12), padding=10)
+lb2.grid(column=0, row=1)
 
-    ev1 = ttk.Entry(frame)
-    ev1.grid(column=1, row=0)
-    ev1.insert("0", INV1)
-    ev1.configure(state="readonly", width=50)
+ev1 = ttk.Entry(frame)
+ev1.grid(column=1, row=0)
+ev1.insert("0", INV1)
+ev1.configure(state="readonly", width=50)
 
-    ev2 = ttk.Entry(frame)
-    ev2.grid(column=1, row=1)
-    ev2.insert("0", INV2)
-    ev2.configure(state="readonly", width=50)
+ev2 = ttk.Entry(frame)
+ev2.grid(column=1, row=1)
+ev2.insert("0", INV2)
+ev2.configure(state="readonly", width=50)
 
-    main.mainloop()
-
-main()
-
-
-
-
-
-
-#SEND DATA API
-# def send_Api():
-#     url = 'https://reqres.in/api/users'
-#
-#     inventory = {
-#         "name": str(INVENTORY1),
-#         "job": str(INVENTORY2)
-#     }
-#
-#     check = requests.post(url, json=inventory)
-#     print(check.text)
-#
-# send_Api()
-
-# def getData_Api():
-#     url = 'https://reqres.in/api/unknown'
-#     data = requests.get(url)
-
-
+main.mainloop()
 
